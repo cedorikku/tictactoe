@@ -93,13 +93,20 @@ const gameController = (function (
         }
 
         const checkColumns = () => {
+            for (let i = 0, cellValue; i < 3; i++) {
+                cellValue = boardWithValues[0][i];
+                if (cellValue === boardWithValues[1][i] &&
+                    (cellValue === boardWithValues[2][i]) &&
+                    (cellValue === 'O' || cellValue === 'X')) {
+                    return true;
+                }
+            }
             return false;
         }
 
         const checkDiagonals = () => {
             return false;
         }
-
 
         const result = (checkRows() || checkColumns() || checkDiagonals()) ? true : false;
         return result;
@@ -146,8 +153,9 @@ const gameController = (function (
 // }
 
 // Game testing
-gameController.playRound(2, 0);
 gameController.playRound(0, 0);
-gameController.playRound(2, 1);
-gameController.playRound(0, 1);
 gameController.playRound(2, 2);
+gameController.playRound(1, 0);
+gameController.playRound(0, 2);
+gameController.playRound(2, 1);
+gameController.playRound(1, 2);
