@@ -105,6 +105,16 @@ const gameController = (function (
         }
 
         const checkDiagonals = () => {
+            const centerValue = boardWithValues[1][1];
+            if ((centerValue === boardWithValues[0][0] && centerValue === boardWithValues[2][2]) &&
+                (centerValue === 'O' || centerValue === 'X')) {
+                return true;
+            } 
+            
+            if ((centerValue === boardWithValues[0][2] && centerValue === boardWithValues[2][0]) &&
+                (centerValue === 'O' || centerValue === 'X')) {
+                return true;
+            }
             return false;
         }
 
@@ -153,9 +163,8 @@ const gameController = (function (
 // }
 
 // Game testing
-gameController.playRound(0, 0);
-gameController.playRound(2, 2);
-gameController.playRound(1, 0);
 gameController.playRound(0, 2);
-gameController.playRound(2, 1);
+gameController.playRound(2, 2);
+gameController.playRound(1, 1);
 gameController.playRound(1, 2);
+gameController.playRound(2, 0);
