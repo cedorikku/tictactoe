@@ -1,4 +1,4 @@
-const gameboard = (function() {
+const gameboard = (function () {
     const row = 3;
     const column = 3;
     const board = [];
@@ -10,9 +10,12 @@ const gameboard = (function() {
         }
     }
 
+    const getBoardState = () => board.map(row => row.map(cell => cell.getValue()));
+
+    //! Remove if UI gets added
     const printBoard = () => {
-        const boardWithValues = board.map(row => row.map(cell => cell.getValue()));
-        console.log(boardWithValues);
+        const boardWithValues = getBoardState();
+        console.table(boardWithValues);
     };
 
     const drawShape = (row, col, shape) => {
@@ -38,13 +41,14 @@ const gameboard = (function() {
         };
     }
 
-    return { 
+    return {
         printBoard,
-        drawShape
+        drawShape,
+        getBoardState,
     };
 })();
 
-const gameController = (function(
+const gameController = (function (
     board,
     playerOneName = "Player 1",
     playerTwoName = "Player 2",
@@ -69,9 +73,37 @@ const gameController = (function(
     }
 
     const printNewRound = () => {
-        board.printBoard();   
+        board.printBoard();
         console.log(`It's now ${getActivePlayer().name}'s turn`)
     };
+
+    function checkWin() {
+        const boardWithValues = board.getBoardState();
+
+        const checkRows = () => {
+            for (let i = 0, cellValue; i < 3; i++) {
+                cellValue = boardWithValues[i][0];
+                if (cellValue === boardWithValues[i][1] &&
+                    (cellValue === boardWithValues[i][2]) &&
+                    (cellValue === 'O' || cellValue === 'X')) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        const checkColumns = () => {
+            return false;
+        }
+
+        const checkDiagonals = () => {
+            return false;
+        }
+
+
+        const result = (checkRows() || checkColumns() || checkDiagonals()) ? true : false;
+        return result;
+    }
 
     const playRound = (row, column) => {
         if (!board.drawShape(row, column, getActivePlayer().shape)) {
@@ -79,10 +111,25 @@ const gameController = (function(
             printNewRound();
         }
 
+        // TODO Add win condition checking logic
+        // If 5 moves have gone, start checking for winning combinations
+
+        // if (tracker.getMoves >= 5) {
+        //     result = checkWin();
+        // }
+        const result = checkWin();
+
+        if (result) {
+            console.log(`${getActivePlayer().name} has won the battle!`);
+            moves = 0;
+            // reset board
+            return;
+        }
+
         switchActiveTurn();
         printNewRound();
     };
-    
+
     printNewRound();
 
     return {
@@ -92,6 +139,15 @@ const gameController = (function(
 
 })(gameboard);
 
-gameController.playRound(1, 1);
+// for (let i = 0; i < 3; i++) {
+//     for (let j = 0; j < 3; j++) { 
+//         gameController.playRound(i, j);
+//     }
+// }
+
+// Game testing
+gameController.playRound(2, 0);
+gameController.playRound(0, 0);
+gameController.playRound(2, 1);
 gameController.playRound(0, 1);
-gameController.playRound(0, 1);
+gameController.playRound(2, 2);
