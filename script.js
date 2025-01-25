@@ -18,6 +18,10 @@ const gameboard = (function () {
         console.table(boardWithValues);
     };
 
+    const clearBoard = () => {
+        board = [];
+    }
+
     const drawShape = (row, col, shape) => {
         if (board[row][col].getValue() !== '') return false;
 
@@ -49,7 +53,6 @@ const gameboard = (function () {
 })();
 
 const gameController = (function (
-    board,
     playerOneName = "Player 1",
     playerTwoName = "Player 2",
 ) {
@@ -73,12 +76,12 @@ const gameController = (function (
     }
 
     const printNewRound = () => {
-        board.printBoard();
+        gameboard.printBoard();
         console.log(`It's now ${getActivePlayer().name}'s turn`)
     };
 
     function checkWin() {
-        const boardWithValues = board.getBoardState();
+        const boardWithValues = gameboard.getBoardState();
 
         const checkRows = () => {
             for (let i = 0, cellValue; i < 3; i++) {
@@ -123,7 +126,7 @@ const gameController = (function (
     }
 
     const playRound = (row, column) => {
-        if (!board.drawShape(row, column, getActivePlayer().shape)) {
+        if (!gameboard.drawShape(row, column, getActivePlayer().shape)) {
             console.log("Invalid move");
             printNewRound();
             return;
@@ -137,6 +140,7 @@ const gameController = (function (
         // }
         const result = checkWin();
 
+        // TODO go along with screen
         if (result) {
             console.log(`${getActivePlayer().name} has won the battle!`);
             moves = 0;
@@ -155,17 +159,4 @@ const gameController = (function (
         playRound,
     };
 
-})(gameboard);
-
-// for (let i = 0; i < 3; i++) {
-//     for (let j = 0; j < 3; j++) { 
-//         gameController.playRound(i, j);
-//     }
-// }
-
-// Game testing
-gameController.playRound(0, 2);
-gameController.playRound(2, 2);
-gameController.playRound(1, 1);
-gameController.playRound(1, 2);
-gameController.playRound(2, 0);
+})();
