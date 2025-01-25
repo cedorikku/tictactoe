@@ -126,6 +126,7 @@ const gameController = (function (
         if (!board.drawShape(row, column, getActivePlayer().shape)) {
             console.log("Invalid move");
             printNewRound();
+            return;
         }
 
         // TODO Add win condition checking logic
