@@ -233,11 +233,13 @@ const screenController = (function(
 
     grid.addEventListener("click", (e) => {
         // TODO check if clicked item is a button
-        const row = e.target.getAttribute("data-row");
-        const col = e.target.getAttribute("data-col");
+        if (e.target.tagName.toLowerCase() === "button") {
+            const row = e.target.getAttribute("data-row");
+            const col = e.target.getAttribute("data-col");
 
-        gameController.playRound(row, col);
-        updateScreen();
+            gameController.playRound(row, col);
+            updateScreen();
+        }
     });
 
     return { 
