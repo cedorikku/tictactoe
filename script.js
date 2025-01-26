@@ -130,17 +130,17 @@ const gameController = (function (
         return result;
     }
 
-    let gameOver = false;
-    const getGameOver = () => gameOver;
+    let gameState = "play";
+    const getGameState = () => gameState;
 
     const handleGameOver = () => {
         if (getTurn() === 9) {
             console.log("It's a tie!");
+            gameState = "tie";
         } else {
             console.log(`${getActivePlayer().name} has won the battle!`);
+            gameState = "win";
         }
-
-        gameOver = true;
     }
 
     const playRound = (row, column) => {
@@ -150,7 +150,6 @@ const gameController = (function (
             return;
         }
 
-        // TODO Add win condition checking logic
         // If 5 moves have gone, start checking for winning combinations
         if (getTurn() >= 4) {
             const won = checkWin();
@@ -172,7 +171,7 @@ const gameController = (function (
 
     const newGame = () => {
         gameboard.emptyBoard();
-        gameOver = false;
+        gameState = "play";
         setTurn(0);
         resetActivePlayer();
     }
@@ -184,7 +183,7 @@ const gameController = (function (
         playRound,
         getTurn,
         newGame,
-        getGameOver,
+        getGameState,
     };
 })();
 
@@ -193,16 +192,20 @@ const screenController = (function(
 ) {
     const grid = document.querySelector(".grid");
     const button = document.getElementById("newGameBtn");
+    const status = document.getElementById("status");
+
+    status.textContent = `${gameController.getActivePlayer().name}'s turn`;
 
     const updateScreen = () => {
         const boardWithValues = gameboard.getBoardState();
-        const box = document.querySelectorAll(".box");
+        const gameState = gameController.getGameState();
 
-        // TODO: check for game state
-        const flag = gameController.getGameOver();
-        box.forEach(btn => {
-            btn.disabled = flag;
-        })
+        if (gameState === "draw" || gameState === "win") {
+            status.textContent = (gameState === "draw") ? "It's a draw!" : `${gameController.getActivePlayer().name} has won!`;
+            setButtonState(true);
+        } else {
+            status.textContent = `${gameController.getActivePlayer().name}'s turn`;
+        }
 
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
@@ -226,9 +229,18 @@ const screenController = (function(
         }
     }
 
+    const setButtonState = (flag) => {
+        const boxes = document.querySelectorAll(".box");
+        
+        boxes.forEach(box => {
+            box.disabled = flag;
+        })
+    }
+
     button.addEventListener("click", () => {
         gameController.newGame();
         updateScreen();
+        setButtonState(false);
     })
 
     grid.addEventListener("click", (e) => {
