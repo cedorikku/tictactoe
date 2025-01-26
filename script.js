@@ -130,12 +130,17 @@ const gameController = (function (
         return result;
     }
 
+    let gameOver = false;
+    const getGameOver = () => gameOver;
+
     const handleGameOver = () => {
         if (getTurn() === 9) {
             console.log("It's a tie!");
         } else {
             console.log(`${getActivePlayer().name} has won the battle!`);
         }
+
+        gameOver = true;
     }
 
     const playRound = (row, column) => {
@@ -167,6 +172,7 @@ const gameController = (function (
 
     const newGame = () => {
         gameboard.emptyBoard();
+        gameOver = false;
         setTurn(0);
         resetActivePlayer();
     }
@@ -178,6 +184,7 @@ const gameController = (function (
         playRound,
         getTurn,
         newGame,
+        getGameOver,
     };
 })();
 
@@ -187,9 +194,15 @@ const screenController = (function(
     const grid = document.querySelector(".grid");
     const button = document.getElementById("newGameBtn");
 
-    // TODO function: updates board on the screen
     const updateScreen = () => {
         const boardWithValues = gameboard.getBoardState();
+        const box = document.querySelectorAll(".box");
+
+        // TODO: check for game state
+        const flag = gameController.getGameOver();
+        box.forEach(btn => {
+            btn.disabled = flag;
+        })
 
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
@@ -200,7 +213,6 @@ const screenController = (function(
         }
     }
 
-    // TODO function: creates the board
     const createBoard = () => {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
@@ -220,6 +232,7 @@ const screenController = (function(
     })
 
     grid.addEventListener("click", (e) => {
+        // TODO check if clicked item is a button
         const row = e.target.getAttribute("data-row");
         const col = e.target.getAttribute("data-col");
 
