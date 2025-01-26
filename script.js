@@ -3,12 +3,15 @@ const gameboard = (function () {
     const column = 3;
     const board = [];
 
-    for (let i = 0; i < row; i++) {
-        board[i] = [];
-        for (let j = 0; j < column; j++) {
-            board[i].push(Cell());
+    const emptyBoard = () => {
+        for (let i = 0; i < row; i++) {
+            board[i] = [];
+            for (let j = 0; j < column; j++) {
+                board[i].push(Cell());
+            }
         }
     }
+    emptyBoard();
 
     const getBoardState = () => board.map(row => row.map(cell => cell.getValue()));
 
@@ -17,10 +20,6 @@ const gameboard = (function () {
         const boardWithValues = getBoardState();
         console.table(boardWithValues);
     };
-
-    const clearBoard = () => {
-        board = [];
-    }
 
     const drawShape = (row, col, shape) => {
         if (board[row][col].getValue() !== '') return false;
@@ -49,6 +48,7 @@ const gameboard = (function () {
         printBoard,
         drawShape,
         getBoardState,
+        emptyBoard,
     };
 })();
 
@@ -56,6 +56,10 @@ const gameController = (function (
     playerOneName = "Player 1",
     playerTwoName = "Player 2",
 ) {
+
+    let turn = 0;
+    const getTurn = () => turn;
+    const setTurn = (newTurn) => turn = newTurn;
 
     const players = [
         {
@@ -125,6 +129,14 @@ const gameController = (function (
         return result;
     }
 
+    const handleGameOver = () => {
+        if (getTurn() === 9) {
+            console.log("It's a tie!");
+        } else {
+            console.log(`${getActivePlayer().name} has won the battle!`);
+        }
+    }
+
     const playRound = (row, column) => {
         if (!gameboard.drawShape(row, column, getActivePlayer().shape)) {
             console.log("Invalid move");
@@ -134,22 +146,22 @@ const gameController = (function (
 
         // TODO Add win condition checking logic
         // If 5 moves have gone, start checking for winning combinations
-
-        // if (tracker.getMoves >= 5) {
-        //     result = checkWin();
-        // }
-        const result = checkWin();
-
-        // TODO go along with screen
-        if (result) {
-            console.log(`${getActivePlayer().name} has won the battle!`);
-            moves = 0;
-            // reset board
-            return;
+        if (getTurn() >= 4) {
+            const won = checkWin();
+            if (won) {
+                handleGameOver();
+                return;
+            }
         }
 
         switchActiveTurn();
         printNewRound();
+        setTurn(getTurn() + 1);
+
+        // If 9 moves have gone, show a tie
+        if (getTurn() === 9) {
+            handleGameOver();
+        }
     };
 
     printNewRound();
@@ -157,8 +169,8 @@ const gameController = (function (
     return {
         getActivePlayer,
         playRound,
+        getTurn,
     };
-
 })();
 
 const screenController = (function(
@@ -173,10 +185,8 @@ const screenController = (function(
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 const cellValue = boardWithValues[i][j];
-                if (cellValue === "O" || cellValue === "X") {
-                    document.querySelector(`[data-row="${i}"][data-col="${j}"]`)
-                        .textContent=cellValue;
-                } 
+                document.querySelector(`[data-row="${i}"][data-col="${j}"]`)
+                    .textContent=cellValue;
             }
         }
     }
