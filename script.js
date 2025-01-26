@@ -15,7 +15,7 @@ const gameboard = (function () {
 
     const getBoardState = () => board.map(row => row.map(cell => cell.getValue()));
 
-    //! Remove if UI gets added
+    // TODO Remove if UI gets added
     const printBoard = () => {
         const boardWithValues = getBoardState();
         console.table(boardWithValues);
@@ -25,6 +25,7 @@ const gameboard = (function () {
         if (board[row][col].getValue() !== '') return false;
 
         board[row][col].addShape(shape);
+        // TODO Remove later
         console.log(`An ${shape} has been placed.`);
         return true;
     }
@@ -80,6 +81,7 @@ const gameController = (function (
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
     }
 
+    // TODO Remove if UI gets added
     const printNewRound = () => {
         gameboard.printBoard();
         console.log(`It's now ${getActivePlayer().name}'s turn`)
@@ -135,9 +137,11 @@ const gameController = (function (
 
     const handleGameOver = () => {
         if (getTurn() === 9) {
+            // TODO Remove later
             console.log("It's a tie!");
             gameState = "tie";
         } else {
+            // TODO Remove later
             console.log(`${getActivePlayer().name} has won the battle!`);
             gameState = "win";
         }
@@ -145,8 +149,8 @@ const gameController = (function (
 
     const playRound = (row, column) => {
         if (!gameboard.drawShape(row, column, getActivePlayer().shape)) {
-            console.log("Invalid move");
-            printNewRound();
+            console.log("Invalid move"); // TODO Remove later
+            printNewRound(); // TODO Remove later
             return;
         }
 
@@ -244,7 +248,6 @@ const screenController = (function(
     })
 
     grid.addEventListener("click", (e) => {
-        // TODO check if clicked item is a button
         if (e.target.tagName.toLowerCase() === "button") {
             const row = e.target.getAttribute("data-row");
             const col = e.target.getAttribute("data-col");
