@@ -204,8 +204,8 @@ const screenController = (function(
         const boardWithValues = gameboard.getBoardState();
         const gameState = gameController.getGameState();
 
-        if (gameState === "draw" || gameState === "win") {
-            status.textContent = (gameState === "draw") ? "It's a draw!" : `${gameController.getActivePlayer().name} has won!`;
+        if (gameState === "tie" || gameState === "win") {
+            status.textContent = (gameState === "tie") ? "It's a tie!" : `${gameController.getActivePlayer().name} has won!`;
             setButtonState(true);
         } else {
             status.textContent = `${gameController.getActivePlayer().name}'s turn`;
