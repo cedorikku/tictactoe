@@ -2,20 +2,39 @@
     box-sizing: border-box;
     margin: 0;
     --box-size: 150px;
+    --accent: #ea4481;
+    --background: black;
+    --text: white;
 }
 
 body {
     font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: var(--background);
+    color: var(--text);
+}
+
+header {
+    margin-top: 2rem;
 }
 
 h1 {
     text-align: center;
+    font-size: 3rem;
+}
+
+h1 > span {
+    color: var(--accent);
 }
 
 main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 2rem;
+}
+
+#status {
+    font-weight: bold;
 }
 
 .grid {
@@ -24,30 +43,57 @@ main {
     display: grid;
     grid-template-columns: repeat(3, var(--box-size));
     grid-auto-rows: auto;
-    gap: 3px;
+    gap: 8px;
 }
 
 .box {
     height: var(--box-size);
     width: var(--box-size);
     background: transparent;
-    border: 1px solid black;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    font-size: 64px;
+    font-weight: 800;
+    color: var(--text);
+    box-shadow: 
+        0 0 14px var(--accent),
+        0 0 1em 0.1em var(--accent) inset;
 }
 
 .box:hover {
-    cursor: pointer;    
+    cursor: pointer;
+    background-color: rgb(255, 255, 255, 0.1);
+}
+
+.box:disabled {
+    background-color: rgb(255, 255, 255, 0.1);
 }
 
 #newGameBtn {
-
+    padding: 0.5em 1em;
+    font-size: 24px;
+    font-weight: bold;
+    background-color: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: var(--text);
 }
 
 #newGameBtn:hover {
     cursor: pointer;
+    outline: 1px solid var(--text);
+    outline-offset: 2px;
 }
 
-@media screen and (max-width: 400px) {
+#newGameBtn:active {
+    outline-offset: 4px;
+}
+
+@media screen and (max-width: 480px) {
     * {
         --box-size: 100px;
+    }
+    .box {
+        font-size: 48px;
     }
 }
