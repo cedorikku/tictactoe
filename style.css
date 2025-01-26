@@ -20,10 +20,11 @@ main {
 
 .grid {
     margin: 0 auto;
-    padding: 24px;
+    padding: 12px;
     display: grid;
     grid-template-columns: repeat(3, var(--box-size));
     grid-auto-rows: auto;
+    gap: 3px;
 }
 
 .box {
@@ -34,7 +35,15 @@ main {
 }
 
 .box:hover {
-    
+    cursor: pointer;    
+}
+
+#newGameBtn {
+
+}
+
+#newGameBtn:hover {
+    cursor: pointer;
 }
 
 @media screen and (max-width: 400px) {
