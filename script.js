@@ -74,6 +74,7 @@ const gameController = (function (
 
     let activePlayer = players[0];
     const getActivePlayer = () => activePlayer;
+    const resetActivePlayer = () => activePlayer = players[0];
 
     const switchActiveTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -164,12 +165,19 @@ const gameController = (function (
         }
     };
 
+    const newGame = () => {
+        gameboard.emptyBoard();
+        setTurn(0);
+        resetActivePlayer();
+    }
+
     printNewRound();
 
     return {
         getActivePlayer,
         playRound,
         getTurn,
+        newGame,
     };
 })();
 
@@ -177,6 +185,7 @@ const screenController = (function(
     document,
 ) {
     const grid = document.querySelector(".grid");
+    const button = document.getElementById("newGameBtn");
 
     // TODO function: updates board on the screen
     const updateScreen = () => {
@@ -204,6 +213,11 @@ const screenController = (function(
             }
         }
     }
+
+    button.addEventListener("click", () => {
+        gameController.newGame();
+        updateScreen();
+    })
 
     grid.addEventListener("click", (e) => {
         const row = e.target.getAttribute("data-row");
