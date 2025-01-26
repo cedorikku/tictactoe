@@ -160,3 +160,54 @@ const gameController = (function (
     };
 
 })();
+
+const screenController = (function(
+    document,
+) {
+    const grid = document.querySelector(".grid");
+
+    // TODO function: updates board on the screen
+    const updateScreen = () => {
+        const boardWithValues = gameboard.getBoardState();
+
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const cellValue = boardWithValues[i][j];
+                if (cellValue === "O" || cellValue === "X") {
+                    document.querySelector(`[data-row="${i}"][data-col="${j}"]`)
+                        .textContent=cellValue;
+                } 
+            }
+        }
+    }
+
+    // TODO function: creates the board
+    const createBoard = () => {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const box = document.createElement("button");
+                box.classList.add("box");
+                box.setAttribute("data-row", i);
+                box.setAttribute("data-col", j);
+
+                grid.appendChild(box);
+            }
+        }
+    }
+
+    grid.addEventListener("click", (e) => {
+        const row = e.target.getAttribute("data-row");
+        const col = e.target.getAttribute("data-col");
+
+        gameController.playRound(row, col);
+        updateScreen();
+    });
+
+    return { 
+        createBoard,
+    };
+
+})(document);
+
+// Game testing
+screenController.createBoard();
