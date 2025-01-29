@@ -1,3 +1,5 @@
 # Tictactoe
 
-[](!./screenshot.png)
+![](./screenshot.png)
+
+Made using HTML, CSS, JavaScript
